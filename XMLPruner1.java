@@ -63,7 +63,7 @@ public class XMLPruner {
                             writeToOutput = true;
                         }
 
-                        // Handle closing elements
+                        // Handle closing elements only if inside a valid element
                         if (writeToOutput) {
                             outputWriterXML.writeEndElement();
                         }
@@ -75,14 +75,16 @@ public class XMLPruner {
                         // Do nothing for document start and end
                         break;
 
-                    default:
-                        // Write text content
-                        String textContent = reader.getText();
+                    case XMLStreamConstants.CHARACTERS:
+                        // Write text content only if inside a valid element
                         if (writeToOutput) {
+                            String textContent = reader.getText();
                             outputWriterXML.writeCharacters(textContent);
-                        } else {
-                            prunedWriterXML.writeCharacters(textContent);
                         }
+                        break;
+
+                    default:
+                        // Other cases not handled
                 }
             }
 
